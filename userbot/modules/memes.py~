@@ -737,13 +737,13 @@ async def decide(event):
                     f"https://yesno.wtf/api?force={decision}").json()
             else:
                 r = requests.get(f"https://yesno.wtf/api").json()
-            await event.client.send_message(event.chat_id,
-                                            str(r["answer"]).upper(),
-                                            reply_to=message_id,
-                                            file=r["image"])
-        except Exception as err:
+        except Excepption as err:
             await event.edit(f"`Error:` {str(err)}")
             return
+    await event.client.send_message(event.chat_id,
+                                    str(r["answer"]).upper(),
+                                    reply_to=message_id,
+                                    file=r["image"])
     await event.delete()
 
 

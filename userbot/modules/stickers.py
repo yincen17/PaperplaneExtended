@@ -167,11 +167,10 @@ async def kang(args):
                         await conv.get_response()
                         # Ensure user doesn't get spamming notifications
                         await bot.send_read_acknowledge(conv.chat_id)
-                        await args.edit(
-                            f"`Sticker added in a Different Pack !\
+                        await args.edit(f"`Sticker added in a Different Pack !\
                             \nThis Pack is Newly created!\
                             \nYour pack can be found [here](t.me/addstickers/{packname})",
-                            parse_mode='md')
+                                        parse_mode='md')
                         return
                 if is_anim:
                     await conv.send_file('AnimatedSticker.tgs')
@@ -238,10 +237,9 @@ async def kang(args):
                 # Ensure user doesn't get spamming notifications
                 await bot.send_read_acknowledge(conv.chat_id)
 
-        await args.edit(
-            f"`Sticker kanged successfully!`\
+        await args.edit(f"`Sticker kanged successfully!`\
             \nPack can be found [here](t.me/addstickers/{packname})",
-            parse_mode='md')
+                        parse_mode='md')
 
 
 async def resize_photo(photo):

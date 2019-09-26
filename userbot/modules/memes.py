@@ -15,9 +15,6 @@ from collections import deque
 
 import requests
 
-from telethon.tl.functions.users import GetFullUserRequest
-from telethon.tl.types import MessageEntityMentionName
-
 from cowpy import cow
 
 from userbot import CMD_HELP
@@ -726,22 +723,20 @@ async def lol(lel):
         await lel.edit(okay)
 
 
-@register(outgoing=True, pattern="^.decide(?: |$)(.*)")
+@register(outgoing=True, pattern="^.(yes|no|maybe|decide)$")
 @errors_handler
 async def decide(event):
     decision = event.pattern_match.group(1).lower()
     message_id = None
     if event.reply_to_msg_id:
         message_id = event.reply_to_msg_id
-    if not decision:
-        r = requests.get("https://yesno.wtf/api").json()
     else:
         try:
-            options = ["yes", "no", "maybe"]
-            if decision not in options:
-                await event.edit("`Available decisions:` *yes*, *no*, *maybe*")
-                return
-            r = requests.get(f"https://yesno.wtf/api?force={decision}").json()
+            if decision != "decide":
+                r = requests.get(
+                    f"https://yesno.wtf/api?force={decision}").json()
+            else:
+                r = requests.get(f"https://yesno.wtf/api").json()
         except Excepption as err:
             await event.edit(f"`Error:` {str(err)}")
             return
@@ -970,7 +965,7 @@ async def metoo(hahayes):
     await hahayes.edit(random.choice(METOOSTR))
 
 
-@register(outgoing=True, pattern="^.oof$")
+@register(outgoing=True, pattern="^Oof$")
 @errors_handler
 async def Oof(e):
     t = "Oof"
@@ -1062,8 +1057,7 @@ async def bluetext(bt_e):
     if await bt_e.get_reply_message() and bt_e.is_group:
         await bt_e.edit(
             "/BLUETEXT /MUST /CLICK.\n"
-            "/ARE /YOU /A /STUPID /ANIMAL /WHICH /IS /ATTRACTED /TO /COLOURS ?"
-        )
+            "/ARE /YOU /A /STUPID /ANIMAL /WHICH /IS /ATTRACTED /TO /COLOURS?")
 
 
 @register(outgoing=True, pattern=r"^.f (.*)")
@@ -1217,7 +1211,7 @@ CMD_HELP.update({
 \nUsage: Just a small command to make your keyboard become a typewriter!\
 \n\n.lfy <query>\
 \nUsage: Let me Google that for you real quick !!\
-\n\n.decide [Optional: (yes, no, maybe)]\
+\n\n.decide [Alternates: (.yes, .no, .maybe)]\
 \nUsage: Make a quick decision.\
 \n\n.scam <action> <time>\
 \n[Available Actions: (typing, contact, game, location, voice, round, video, photo, document, cancel)]\

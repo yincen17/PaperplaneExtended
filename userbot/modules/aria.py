@@ -6,17 +6,25 @@ from asyncio import sleep
 from os import system
 from userbot import LOGS, CMD_HELP
 from userbot.events import register, errors_handler
+from requests import get
 
-cmd = "aria2c \
+trackers = list(
+    get("https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_best.txt"
+        ).text.split('\n\n'))
+
+cmd = f"aria2c \
 --enable-rpc \
 --rpc-listen-all=false \
 --rpc-listen-port 6800 \
 --max-connection-per-server=10 \
 --rpc-max-request-size=1024M \
 --seed-time=0.01 \
+--max-upload-limit=5K \
+--max-concurrent-downloads=5 \
 --min-split-size=10M \
 --follow-torrent=mem \
 --split=10 \
+--bt-tracker= {trackers} \
 --daemon=true \
 --allow-overwrite=true"
 

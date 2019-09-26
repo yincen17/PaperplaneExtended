@@ -8,8 +8,9 @@ from userbot import LOGS, CMD_HELP
 from userbot.events import register, errors_handler
 from requests import get
 
-# Get best trackers for improved download speeds, thanks K-E-N-W-A-Y.
-trackers = f"[{get('https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_best.txt').text.replace('\n\n', ','))}]"
+trackers = list(
+    get("https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_best.txt"
+        ).text.split('\n\n'))
 
 cmd = f"aria2c \
 --enable-rpc \
@@ -23,7 +24,7 @@ cmd = f"aria2c \
 --min-split-size=10M \
 --follow-torrent=mem \
 --split=10 \
---bt-tracker={trackers} \
+--bt-tracker= {trackers} \
 --daemon=true \
 --allow-overwrite=true"
 

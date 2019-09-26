@@ -9,10 +9,7 @@ from userbot.events import register, errors_handler
 from requests import get
 
 # Get best trackers for improved download speeds, thanks K-E-N-W-A-Y.
-trackers_list = get(
-    'https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_best.txt'
-).text.replace('\n\n', ',')
-trackers = f"[{trackers_list}]"
+trackers = f"[{get('https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_best.txt').text.replace('\n\n', ','))}]"
 
 cmd = f"aria2c \
 --enable-rpc \

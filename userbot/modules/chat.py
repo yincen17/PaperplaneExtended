@@ -140,6 +140,7 @@ async def keep_read(message):
 async def sedNinja(event):
     """For regex-ninja module, auto delete command starting with s/"""
     if regexNinja:
+        sleep(2)
         await event.delete()
 
 

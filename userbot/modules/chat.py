@@ -135,23 +135,28 @@ async def keep_read(message):
                 await message.client.send_read_acknowledge(message.chat_id)
 
 
-#Regex-Ninja module by @Kandnub
+# Regex-Ninja module by @Kandnub
 @register(outgoing=True, pattern="^s/")
- """For regex-ninja module, auto delete command starting with s/"""
- async def sedNinja(event):
-     if regexNinja:
-         await event.delete()
+async def sedNinja(event):
+    """For regex-ninja module, auto delete command starting with s/"""
+    if regexNinja:
+        await event.delete()
 
-@register(outgoing=True, pattern="^.(enable|disable) regexninja$")
- """For regex-ninja Enable/Disable, enable/disable the regex ninja module"""
- async def sedNinjaToggle(event):
-     global regexNinja
-     if event.pattern_match.group(1) == "enable":
-         regexNinja = True
-         await event.edit("`Successfully enabled ninja mode for Regexbot.`")
-     else:
-         regexNinja = False
-         await event.edit("`Successfully disabled ninja mode for Regexbot.`")
+
+@register(outgoing=True, pattern="^.regexninja (on|off)$")
+async def sedNinjaToggle(event):
+    """ Enables or disables the regex ninja module. """
+    global regexNinja
+    if event.pattern_match.group(1) == "on":
+        regexNinja = True
+        await event.edit("`Successfully enabled ninja mode for Regexbot.`")
+        sleep(2)
+        await event.delete()
+    elif event.pattern_match.group(1) == "off":
+        regexNinja = False
+        await event.edit("`Successfully disabled ninja mode for Regexbot.`")
+        sleep(2)
+        await event.delete()
 
 
 CMD_HELP.update({
@@ -170,8 +175,7 @@ CMD_HELP.update({
 \nUsage: Allows you to mute any chat.\
 \n\n.mention <reply/tag> <optional text>\
 \nUsage: Generate a permanent link to the user's profile with optional custom text.\
-\n\n.regex-ninja\
-\nUsage: .enable regexninja Or .disable regexninja\
-\nenables or disables regex ninja module.\
-\nThis module auto deletes the regex triggering messages."
+\n\n.regexninja on/off\
+\nUsage: Globally enable/disables the regex ninja module.\
+\nRegex Ninja module helps to delete the regex bot's triggering messages."
 })

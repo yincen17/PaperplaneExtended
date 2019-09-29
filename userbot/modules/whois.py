@@ -18,7 +18,6 @@ from userbot.events import register, errors_handler
 
 
 @register(pattern=".whois(?: |$)(.*)", outgoing=True)
-@errors_handler
 async def who(event):
 
     await event.edit(

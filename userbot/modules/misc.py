@@ -19,7 +19,6 @@ from userbot.events import register, errors_handler
 
 
 @register(outgoing=True, pattern="^.random")
-@errors_handler
 async def randomise(items):
     """ For .random command, get a random item from the list of items. """
     itemo = (items.text[8:]).split()
@@ -34,7 +33,6 @@ async def randomise(items):
 
 
 @register(outgoing=True, pattern="^.sleep( [0-9]+)?$")
-@errors_handler
 async def sleepybot(time):
     """ For .sleep command, let the userbot snooze for a few second. """
     message = time.text
@@ -54,7 +52,6 @@ async def sleepybot(time):
 
 
 @register(outgoing=True, pattern="^.shutdown$")
-@errors_handler
 async def killdabot(event):
     """ For .shutdown command, shut the bot down."""
     await event.edit("`Goodbye *Windows XP shutdown sound*....`")
@@ -65,7 +62,6 @@ async def killdabot(event):
 
 
 @register(outgoing=True, pattern="^.restart$")
-@errors_handler
 async def killdabot(event):
     await event.edit("`BRB... *PornHub intro*`")
     if BOTLOG:
@@ -79,7 +75,6 @@ async def killdabot(event):
 
 
 @register(outgoing=True, pattern="^.community$")
-@errors_handler
 async def bot_community(community):
     """ For .community command, just returns OG Paperplane's group link. """
     await community.edit(
@@ -89,7 +84,6 @@ async def bot_community(community):
 
 
 @register(outgoing=True, pattern="^.support$")
-@errors_handler
 async def bot_support(wannahelp):
     """ For .support command, just returns the group link. """
     await wannahelp.edit(
@@ -98,13 +92,11 @@ async def bot_support(wannahelp):
 
 
 @register(outgoing=True, pattern="^.creator$")
-@errors_handler
 async def creator(e):
     await e.edit("[AvinashReddy3108](https://t.me/AvinashReddy3108)")
 
 
 @register(outgoing=True, pattern="^.readme$")
-@errors_handler
 async def reedme(e):
     await e.edit(
         "Here's something for you to read:\n"
@@ -117,7 +109,6 @@ async def reedme(e):
 
 # Copyright (c) Gegham Zakaryan | 2019
 @register(outgoing=True, pattern="^.repeat (.*)")
-@errors_handler
 async def repeat(rep):
     cnt, txt = rep.pattern_match.group(1).split(' ', 1)
     replyCount = int(cnt)
@@ -132,7 +123,6 @@ async def repeat(rep):
 
 
 @register(outgoing=True, pattern="^.repo$")
-@errors_handler
 async def repo_is_here(wannasee):
     """ For .repo command, just returns the repo URL. """
     await wannasee.edit(
@@ -141,7 +131,6 @@ async def repo_is_here(wannasee):
 
 
 @register(outgoing=True, pattern="^.raw$")
-@errors_handler
 async def raw(event):
     the_real_message = None
     reply_to_id = None

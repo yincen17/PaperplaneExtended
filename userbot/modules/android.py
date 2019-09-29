@@ -18,7 +18,6 @@ DEVICES_DATA = 'https://raw.githubusercontent.com/androidtrackers/' \
 
 
 @register(outgoing=True, pattern="^.magisk$")
-@errors_handler
 async def magisk(request):
     """ magisk latest releases """
     url = 'https://raw.githubusercontent.com/topjohnwu/magisk_files/master/'
@@ -33,7 +32,6 @@ async def magisk(request):
 
 
 @register(outgoing=True, pattern=r"^.device(?: |$)(\S*)")
-@errors_handler
 async def device_info(request):
     """ get android device basic info from its codename """
     textx = await request.get_reply_message()
@@ -65,7 +63,6 @@ async def device_info(request):
 
 
 @register(outgoing=True, pattern=r"^.codename(?: |)([\S]*)(?: |)([\s\S]*)")
-@errors_handler
 async def codename_info(request):
     """ search for android codename """
     textx = await request.get_reply_message()
@@ -101,7 +98,6 @@ async def codename_info(request):
 
 
 @register(outgoing=True, pattern=r"^.specs(?: |)([\S]*)(?: |)([\s\S]*)")
-@errors_handler
 async def devices_specifications(request):
     """ Mobile devices specifications """
     textx = await request.get_reply_message()
@@ -155,7 +151,6 @@ async def devices_specifications(request):
 
 
 @register(outgoing=True, pattern=r"^.twrp(?: |$)(\S*)")
-@errors_handler
 async def twrp(request):
     """ get android device twrp """
     textx = await request.get_reply_message()

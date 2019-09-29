@@ -16,7 +16,6 @@ from userbot.events import errors_handler
 
 
 @bot.on(ChatAction)
-@errors_handler
 async def ANTI_SPAMBOT(welcm):
     try:
         ''' Ban a recently joined user if it

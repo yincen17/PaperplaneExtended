@@ -33,7 +33,6 @@ KANGING_STR = [
 
 
 @register(outgoing=True, pattern="^.kang")
-@errors_handler
 async def kang(args):
     """ For .kang command, kangs stickers or creates new ones. """
     user = await bot.get_me()
@@ -268,7 +267,6 @@ async def resize_photo(photo):
 
 
 @register(outgoing=True, pattern="^.stkrinfo$")
-@errors_handler
 async def get_pack_info(event):
     if not event.is_reply:
         await event.edit("`I can't fetch info from nothing, can I ?!`")

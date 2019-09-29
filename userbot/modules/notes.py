@@ -11,7 +11,6 @@ from asyncio import sleep
 
 
 @register(outgoing=True, pattern="^.notes$")
-@errors_handler
 async def notes_active(svd):
     """ For .notes command, list all of the notes saved in a chat. """
     try:
@@ -31,7 +30,6 @@ async def notes_active(svd):
 
 
 @register(outgoing=True, pattern=r"^.clear (.*)")
-@errors_handler
 async def remove_notes(clr):
     """ For .clear command, clear note with the given name."""
     try:
@@ -48,7 +46,6 @@ async def remove_notes(clr):
 
 
 @register(outgoing=True, pattern=r"^.save (.*)")
-@errors_handler
 async def add_note(fltr):
     """ For .save command, saves notes in a chat. """
     try:
@@ -82,7 +79,6 @@ async def add_note(fltr):
 
 
 @register(pattern=r"#\.*", disable_edited=True)
-@errors_handler
 async def incom_note(getnt):
     """ Notes logic. """
     try:
@@ -109,7 +105,6 @@ async def incom_note(getnt):
 
 
 @register(outgoing=True, pattern="^.rmbotnotes (.*)")
-@errors_handler
 async def kick_marie_notes(kick):
     """ For .rmbotnotes command, allows you to kick all \
         Marie(or her clones) notes from a chat. """

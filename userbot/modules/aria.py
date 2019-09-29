@@ -37,7 +37,6 @@ aria2 = aria2p.API(aria2p.Client(host="http://localhost", port=6800,
 
 
 @register(outgoing=True, pattern="^.amag(?: |$)(.*)")
-@errors_handler
 async def magnet_download(event):
     magnet_uri = event.pattern_match.group(1)
     # Add Magnet URI Into Queue
@@ -55,7 +54,6 @@ async def magnet_download(event):
 
 
 @register(outgoing=True, pattern="^.ator(?: |$)(.*)")
-@errors_handler
 async def torrent_download(event):
     torrent_file_path = event.pattern_match.group(1)
     # Add Torrent Into Queue
@@ -72,7 +70,6 @@ async def torrent_download(event):
 
 
 @register(outgoing=True, pattern="^.aurl(?: |$)(.*)")
-@errors_handler
 async def magnet_download(event):
     uri = [event.pattern_match.group(1)]
     try:  # Add URL Into Queue
@@ -90,7 +87,6 @@ async def magnet_download(event):
 
 
 @register(outgoing=True, pattern="^.aclear(?: |$)(.*)")
-@errors_handler
 async def remove_all(event):
     try:
         removed = aria2.remove_all(force=True)
@@ -106,7 +102,6 @@ async def remove_all(event):
 
 
 @register(outgoing=True, pattern="^.apause(?: |$)(.*)")
-@errors_handler
 async def pause_all(event):
     # Pause ALL Currently Running Downloads.
     paused = aria2.pause_all(force=True)
@@ -117,7 +112,6 @@ async def pause_all(event):
 
 
 @register(outgoing=True, pattern="^.aresume(?: |$)(.*)")
-@errors_handler
 async def resume_all(event):
     resumed = aria2.resume_all()
     await event.edit("`Resuming downloads...`")
@@ -128,7 +122,6 @@ async def resume_all(event):
 
 
 @register(outgoing=True, pattern="^.ashow(?: |$)(.*)")
-@errors_handler
 async def show_all(event):
     output = "output.txt"
     downloads = aria2.get_downloads()
@@ -173,7 +166,7 @@ async def check_progress_for_dl(gid, event, previous):
         file = aria2.get_download(gid)
         complete = file.is_complete
         try:
-            if not file.error_message:
+            if not complete and not file.error_message:
                 msg = f"\nDownloading File: `{file.name}`"
                 msg += f"\nSpeed: {file.download_speed_string()}"
                 msg += f"\nProgress: {file.progress_string()}"
@@ -191,10 +184,11 @@ async def check_progress_for_dl(gid, event, previous):
             file = aria2.get_download(gid)
             complete = file.is_complete
             if complete:
-                await event.edit(f"File Downloaded Successfully:`{file.name}`")
+                await event.edit(f"File Downloaded Successfully: `{file.name}`"
+                                 )
                 return False
         except Exception as e:
-            if "not found" in str(e) or "'file'" in str(e):
+            if " not found" in str(e) or "'file'" in str(e):
                 await event.edit("Download Canceled :\n`{}`".format(file.name))
                 await sleep(2.5)
                 await event.delete()

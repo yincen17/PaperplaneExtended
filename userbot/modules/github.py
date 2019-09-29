@@ -4,7 +4,6 @@ from userbot import CMD_HELP
 
 
 @register(pattern=r".git (.*)", outgoing=True)
-@errors_handler
 async def github(event):
     URL = f"https://api.github.com/users/{event.pattern_match.group(1)}"
     chat = await event.get_chat()

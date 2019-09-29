@@ -41,7 +41,6 @@ G_DRIVE_DIR_MIME_TYPE = "application/vnd.google-apps.folder"
 
 
 @register(pattern=r"^.gdrive(?: |$)(.*)", outgoing=True)
-@errors_handler
 async def gdrive_upload_function(dryb):
     """ For .gdrive command, upload files to google drive. """
     await dryb.edit("Processing ...")
@@ -76,8 +75,9 @@ async def gdrive_upload_function(dryb):
             speed = downloader.get_speed()
             elapsed_time = round(diff) * 1000
             progress_str = "[{0}{1}] {2}%".format(
-                ''.join(["▰" for i in range(math.floor(percentage / 5))]),
-                ''.join(["▱" for i in range(20 - math.floor(percentage / 5))]),
+                ''.join(["▰" for i in range(math.floor(percentage / 10))]),
+                ''.join(["▱"
+                         for i in range(10 - math.floor(percentage / 10))]),
                 round(percentage, 2))
             estimated_total_time = downloader.get_eta(human=True)
             try:
@@ -155,7 +155,6 @@ async def gdrive_upload_function(dryb):
 
 
 @register(pattern=r"^.ggd(?: |$)(.*)", outgoing=True)
-@errors_handler
 async def upload_dir_to_gdrive(event):
     await event.edit("Processing ...")
     if CLIENT_ID is None or CLIENT_SECRET is None:
@@ -186,7 +185,6 @@ async def upload_dir_to_gdrive(event):
 
 
 @register(pattern=r"^.list(?: |$)(.*)", outgoing=True)
-@errors_handler
 async def gdrive_search_list(event):
     await event.edit("Processing ...")
     if CLIENT_ID is None or CLIENT_SECRET is None:
@@ -214,7 +212,6 @@ async def gdrive_search_list(event):
     pattern=
     r"^.gsetf https?://drive\.google\.com/drive/u/\d/folders/([-\w]{25,})",
     outgoing=True)
-@errors_handler
 async def download(set):
     """For .gsetf command, allows you to set path"""
     await set.edit("Processing ...")
@@ -232,7 +229,6 @@ async def download(set):
 
 
 @register(pattern="^.gsetclear$", outgoing=True)
-@errors_handler
 async def download(gclr):
     """For .gsetclear command, allows you clear ur curnt custom path"""
     await gclr.reply("Processing ...")
@@ -241,7 +237,6 @@ async def download(gclr):
 
 
 @register(pattern="^.gfolder$", outgoing=True)
-@errors_handler
 async def show_current_gdrove_folder(event):
     if parent_id:
         folder_link = f"https://drive.google.com/drive/folders/" + parent_id
@@ -324,9 +319,10 @@ async def upload_file(http, file_path, file_name, mime_type, event):
         await asyncio.sleep(1)
         if status:
             percentage = int(status.progress() * 100)
-            progress_str = "[{0}{1}] {2}%\n".format(
-                "".join(["▰" for i in range(math.floor(percentage / 5))]),
-                "".join(["▱" for i in range(20 - math.floor(percentage / 5))]),
+            progress_str = "[{0}{1}] {2}%".format(
+                "".join(["▰" for i in range(math.floor(percentage / 10))]),
+                "".join(["▱"
+                         for i in range(10 - math.floor(percentage / 10))]),
                 round(percentage, 2))
             current_message = f"Uploading to Google Drive\nFile Name: {file_name}\n{progress_str}"
             if display_message != current_message:

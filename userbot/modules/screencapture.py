@@ -16,7 +16,6 @@ from userbot import GOOGLE_CHROME_BIN, CHROME_DRIVER, CMD_HELP
 
 
 @register(pattern=r".ss (.*)", outgoing=True)
-@errors_handler
 async def capture(url):
     """ For .ss command, capture a website's screenshot and send the photo. """
     await url.edit("Processing ...")

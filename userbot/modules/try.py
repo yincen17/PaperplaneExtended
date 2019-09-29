@@ -13,7 +13,6 @@ from userbot import CMD_HELP
 
 
 @register(outgoing=True, pattern="^.try")
-@errors_handler
 async def test(event):
     await event.edit("Processing ...")
     cmd = event.text.split(' ', 1)[1]

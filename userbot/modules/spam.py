@@ -12,7 +12,6 @@ from userbot.events import register, errors_handler
 
 
 @register(outgoing=True, pattern="^.cspam (.*)")
-@errors_handler
 async def tmeme(e):
     cspam = str(e.pattern_match.group(1))
     message = cspam.replace(" ", "")
@@ -26,7 +25,6 @@ async def tmeme(e):
 
 
 @register(outgoing=True, pattern="^.wspam (.*)")
-@errors_handler
 async def tmeme(e):
     wspam = str(e.pattern_match.group(1))
     message = wspam.split()
@@ -40,7 +38,6 @@ async def tmeme(e):
 
 
 @register(outgoing=True, pattern="^.spam (.*)")
-@errors_handler
 async def spammer(e):
     counter = int(e.pattern_match.group(1).split(' ', 1)[0])
     spam_message = str(e.pattern_match.group(1).split(' ', 1)[1])
@@ -52,7 +49,6 @@ async def spammer(e):
 
 
 @register(outgoing=True, pattern="^.picspam")
-@errors_handler
 async def tiny_pic_spam(e):
     message = e.text
     text = message.split()
@@ -68,7 +64,6 @@ async def tiny_pic_spam(e):
 
 
 @register(outgoing=True, pattern="^.delayspam (.*)")
-@errors_handler
 async def spammer(e):
     spamDelay = float(e.pattern_match.group(1).split(' ', 2)[0])
     counter = int(e.pattern_match.group(1).split(' ', 2)[1])
@@ -89,7 +84,7 @@ CMD_HELP.update({
 \nUsage: Spam the text letter by letter.\
 \n\n.spam <count> <text>\
 \nUsage: Floods text in the chat !!\
-\n\n.wpam <text>\
+\n\n.wspam <text>\
 \nUsage: Spam the text word by word.\
 \n\n.picspam <count> <link to image/gif>\
 \nUsage: As if text spam was not enough !!\

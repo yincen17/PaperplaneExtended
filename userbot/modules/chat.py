@@ -11,7 +11,6 @@ from userbot.modules.admin import get_user_from_event
 
 
 @register(outgoing=True, pattern="^.userid$")
-@errors_handler
 async def useridgetter(target):
     """ For .userid command, returns the ID of the target user. """
     message = await target.get_reply_message()
@@ -33,7 +32,6 @@ async def useridgetter(target):
 
 
 @register(outgoing=True, pattern="^.mention(?: |$)(.*)")
-@errors_handler
 async def permalink(mention):
     """ For .mention command, generates a link to the user's PM with a custom text. """
     user, custom = await get_user_from_event(mention)
@@ -49,14 +47,12 @@ async def permalink(mention):
 
 
 @register(outgoing=True, pattern="^.chatid$")
-@errors_handler
 async def chatidgetter(chat):
     """ For .chatid, returns the ID of the chat you are in at that moment. """
     await chat.edit("Chat ID: `" + str(chat.chat_id) + "`")
 
 
 @register(outgoing=True, pattern=r"^.log(?: |$)([\s\S]*)")
-@errors_handler
 async def log(log_text):
     """ For .log command, forwards a message or the command argument to the bot logs group """
     if BOTLOG:
@@ -78,7 +74,6 @@ async def log(log_text):
 
 
 @register(outgoing=True, pattern="^.kickme$")
-@errors_handler
 async def kickme(leave):
     """ Basically it's .kickme command """
     await leave.edit("Nope, no, no, I go away")
@@ -86,7 +81,6 @@ async def kickme(leave):
 
 
 @register(outgoing=True, pattern="^.unmutechat$")
-@errors_handler
 async def unmute_chat(unm_e):
     """ For .unmutechat command, unmute a muted chat. """
     try:
@@ -101,7 +95,6 @@ async def unmute_chat(unm_e):
 
 
 @register(outgoing=True, pattern="^.mutechat$")
-@errors_handler
 async def mute_chat(mute_e):
     """ For .mutechat command, mute any chat. """
     try:
@@ -121,7 +114,6 @@ async def mute_chat(mute_e):
 
 
 @register(incoming=True)
-@errors_handler
 async def keep_read(message):
     """ The mute logic. """
     try:

@@ -10,7 +10,6 @@ from userbot import CMD_HELP, BOTLOG_CHATID
 
 
 @register(outgoing=True, pattern=r"\$\.*", ignore_unsafe=True)
-@errors_handler
 async def on_snip(event):
     """ Snips logic. """
     try:
@@ -33,7 +32,6 @@ async def on_snip(event):
 
 
 @register(outgoing=True, pattern="^.snip (.*)")
-@errors_handler
 async def on_snip_save(event):
     """ For .snip command, saves snips for future use. """
     try:
@@ -68,7 +66,6 @@ async def on_snip_save(event):
 
 
 @register(outgoing=True, pattern="^.snips$")
-@errors_handler
 async def on_snip_list(event):
     """ For .snips command, lists snips saved by you. """
     try:
@@ -90,7 +87,6 @@ async def on_snip_list(event):
 
 
 @register(outgoing=True, pattern="^.remsnip (.*)")
-@errors_handler
 async def on_snip_delete(event):
     """ For .remsnip command, deletes a snip. """
     try:

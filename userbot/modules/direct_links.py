@@ -19,7 +19,6 @@ from userbot.events import register, errors_handler
 
 
 @register(outgoing=True, pattern=r"^.direct(?: |$)([\s\S]*)")
-@errors_handler
 async def direct_link_generator(request):
     """ direct links generator """
     await request.edit("`Processing...`")

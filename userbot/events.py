@@ -25,8 +25,8 @@ def register(**args):
     disable_edited = args.get('disable_edited', False)
     ignore_unsafe = args.get('ignore_unsafe', False)
     unsafe_pattern = r'^[^/!#@\$A-Za-z]'
-    group_only = args.get('group_only', False)
-    forwards = args.get('forwards', False)
+    groups_only = args.get('groups_only', False)
+    trigger_on_fwd = args.get('trigger_on_fwd', False)
     disable_errors = args.get('disable_errors', False)
 
     if pattern is not None and not pattern.startswith('(?i)'):
@@ -38,14 +38,14 @@ def register(**args):
     if "ignore_unsafe" in args:
         del args['ignore_unsafe']
 
-    if "group_only" in args:
+    if "groups_only" in args:
         del args['group_only']
 
     if "disable_errors" in args:
         del args['disable_errors']
 
-    if "forwards" in args:
-        del args['forwards']
+    if "trigger_on_fwd" in args:
+        del args['trigger_on_fwd']
 
     if pattern:
         if not ignore_unsafe:
@@ -53,6 +53,10 @@ def register(**args):
 
     def decorator(func):
         async def wrapper(check):
+
+            if not trigger_on_fwd and check.fwd_from:
+                return
+
             if group_only and not check.is_group:
                 await check.respond("`I don't think this is a group.`")
                 return

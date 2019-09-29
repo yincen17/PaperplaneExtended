@@ -7,7 +7,7 @@
 """ Userbot module for other small commands. """
 
 from random import randint
-from time import sleep
+from asyncio import sleep
 from os import execl
 import sys
 import os
@@ -41,13 +41,13 @@ async def sleepybot(time):
     else:
         counter = int(time.pattern_match.group(1))
         await time.edit("`I am sulking and snoozing....`")
-        sleep(2)
+        await sleep(2)
         if BOTLOG:
             await time.client.send_message(
                 BOTLOG_CHATID,
                 "You put the bot to sleep for " + str(counter) + " seconds",
             )
-        sleep(counter)
+        await sleep(counter)
         await time.edit("`OK, I'm awake now.`")
 
 

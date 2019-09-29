@@ -7,7 +7,6 @@
 
 from telethon.tl.functions.contacts import BlockRequest, UnblockRequest
 from telethon.tl.functions.messages import ReportSpamRequest
-from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import User
 from sqlalchemy.exc import IntegrityError
 
@@ -166,10 +165,10 @@ async def approvepm(apprvpm):
 
     if apprvpm.reply_to_msg_id:
         reply = await apprvpm.get_reply_message()
-        replied_user = await apprvpm.client(GetFullUserRequest(reply.from_id))
-        aname = replied_user.user.id
-        name0 = str(replied_user.user.first_name)
-        uid = replied_user.user.id
+        replied_user = await apprvpm.client.get_entity(reply.from_id)
+        aname = replied_user.id
+        name0 = str(replied_user.first_name)
+        uid = replied_user.id
 
     else:
         aname = await apprvpm.client.get_entity(apprvpm.chat_id)
@@ -206,11 +205,10 @@ async def disapprovepm(disapprvpm):
 
     if disapprvpm.reply_to_msg_id:
         reply = await disapprvpm.get_reply_message()
-        replied_user = await disapprvpm.client(
-            GetFullUserRequest(reply.from_id))
-        aname = replied_user.user.id
-        name0 = str(replied_user.user.first_name)
-        dissprove(replied_user.user.id)
+        replied_user = await disapprvpm.client.get_entity(reply.from_id)
+        aname = replied_user.id
+        name0 = str(replied_user.first_name)
+        dissprove(replied_user.id)
     else:
         dissprove(disapprvpm.chat_id)
         aname = await disapprvpm.client.get_entity(disapprvpm.chat_id)
@@ -232,12 +230,12 @@ async def blockpm(block):
     """ For .block command, block people from PMing you! """
     if block.reply_to_msg_id:
         reply = await block.get_reply_message()
-        replied_user = await block.client(GetFullUserRequest(reply.from_id))
-        aname = replied_user.user.id
-        name0 = str(replied_user.user.first_name)
-        await block.client(BlockRequest(replied_user.user.id))
+        replied_user = await block.client.get_entity(reply.from_id)
+        aname = replied_user.id
+        name0 = str(replied_user.first_name)
+        await block.client(BlockRequest(replied_user.id))
         await block.edit("`You've been blocked!`")
-        uid = replied_user.user.id
+        uid = replied_user.id
     else:
         await block.client(BlockRequest(block.chat_id))
         aname = await block.client.get_entity(block.chat_id)
@@ -263,15 +261,15 @@ async def unblockpm(unblock):
     """ For .unblock command, let people PMing you again! """
     if unblock.reply_to_msg_id:
         reply = await unblock.get_reply_message()
-        replied_user = await unblock.client(GetFullUserRequest(reply.from_id))
-        name0 = str(replied_user.user.first_name)
-        await unblock.client(UnblockRequest(replied_user.user.id))
+        replied_user = await unblock.client.get_entity(reply.from_id)
+        name0 = str(replied_user.first_name)
+        await unblock.client(UnblockRequest(replied_user.id))
         await unblock.edit("`You have been unblocked.`")
 
     if BOTLOG:
         await unblock.client.send_message(
             BOTLOG_CHATID,
-            f"[{name0}](tg://user?id={replied_user.user.id})"
+            f"[{name0}](tg://user?id={replied_user.id})"
             " was unblocc'd!.",
         )
 

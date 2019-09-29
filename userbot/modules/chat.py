@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 """ Userbot module containing userid, chatid and log commands"""
 
-from time import sleep
+from asyncio import sleep
 from userbot import CMD_HELP, BOTLOG, BOTLOG_CHATID, bot
 from userbot.events import register
 from userbot.modules.admin import get_user_from_event
@@ -69,7 +69,7 @@ async def log(log_text):
         await log_text.edit("`Logged Successfully`")
     else:
         await log_text.edit("`This feature requires Logging to be enabled!`")
-    sleep(2)
+    await sleep(2)
     await log_text.delete()
 
 
@@ -90,7 +90,7 @@ async def unmute_chat(unm_e):
         return
     unkread(str(unm_e.chat_id))
     await unm_e.edit("```Unmuted this chat Successfully```")
-    sleep(2)
+    await sleep(2)
     await unm_e.delete()
 
 
@@ -105,7 +105,7 @@ async def mute_chat(mute_e):
     await mute_e.edit(str(mute_e.chat_id))
     kread(str(mute_e.chat_id))
     await mute_e.edit("`Shush! This chat will be silenced!`")
-    sleep(2)
+    await sleep(2)
     await mute_e.delete()
     if BOTLOG:
         await mute_e.client.send_message(
@@ -128,11 +128,14 @@ async def keep_read(message):
 
 
 # Regex-Ninja module by @Kandnub
+regexNinja = False
+
+
 @register(outgoing=True, pattern="^s/")
 async def sedNinja(event):
     """For regex-ninja module, auto delete command starting with s/"""
     if regexNinja:
-        sleep(2)
+        await sleep(.5)
         await event.delete()
 
 
@@ -143,12 +146,12 @@ async def sedNinjaToggle(event):
     if event.pattern_match.group(1) == "on":
         regexNinja = True
         await event.edit("`Successfully enabled ninja mode for Regexbot.`")
-        sleep(2)
+        await sleep(1)
         await event.delete()
     elif event.pattern_match.group(1) == "off":
         regexNinja = False
         await event.edit("`Successfully disabled ninja mode for Regexbot.`")
-        sleep(2)
+        await sleep(1)
         await event.delete()
 
 

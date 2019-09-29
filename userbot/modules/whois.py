@@ -28,7 +28,11 @@ async def who(event):
 
     replied_user = await get_user(event)
 
-    photo, caption = await fetch_info(replied_user, event)
+    try:
+        photo, caption = await fetch_info(replied_user, event)
+    except AttributeError:
+        event.edit("`Could not fetch info of that user.`")
+        return
 
     message_id_to_reply = event.message.reply_to_msg_id
 

@@ -57,7 +57,7 @@ def register(**args):
             if not trigger_on_fwd and check.fwd_from:
                 return
 
-            if group_only and not check.is_group:
+            if groups_only and not check.is_group:
                 await check.respond("`I don't think this is a group.`")
                 return
 

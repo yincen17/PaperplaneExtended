@@ -39,7 +39,7 @@ def register(**args):
         del args['ignore_unsafe']
 
     if "groups_only" in args:
-        del args['group_only']
+        del args['groups_only']
 
     if "disable_errors" in args:
         del args['disable_errors']

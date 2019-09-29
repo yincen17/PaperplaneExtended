@@ -19,7 +19,7 @@ from oauth2client import file, client, tools
 from userbot import (G_DRIVE_CLIENT_ID, G_DRIVE_CLIENT_SECRET,
                      G_DRIVE_AUTH_TOKEN_DATA, GDRIVE_FOLDER_ID, BOTLOG_CHATID,
                      TEMP_DOWNLOAD_DIRECTORY, CMD_HELP, LOGS)
-from userbot.events import register, errors_handler
+from userbot.events import register
 from mimetypes import guess_type
 import httplib2
 import subprocess

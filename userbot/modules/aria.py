@@ -5,7 +5,7 @@ import aria2p
 from asyncio import sleep
 from os import system
 from userbot import LOGS, CMD_HELP
-from userbot.events import register, errors_handler
+from userbot.events import register
 from requests import get
 
 # Get best trackers for improved download speeds, thanks K-E-N-W-A-Y.

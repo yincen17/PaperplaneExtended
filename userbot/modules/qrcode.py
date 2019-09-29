@@ -17,7 +17,7 @@ from barcode.writer import ImageWriter
 from bs4 import BeautifulSoup
 
 from userbot import CMD_HELP
-from userbot.events import register, errors_handler
+from userbot.events import register
 
 
 @register(pattern=r"^.decode$", outgoing=True)

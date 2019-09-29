@@ -12,7 +12,6 @@ from telethon.events import ChatAction
 from telethon.tl.types import ChannelParticipantsAdmins, Message
 
 from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, ANTI_SPAMBOT, ANTI_SPAMBOT_SHOUT, bot
-from userbot.events import errors_handler
 
 
 @bot.on(ChatAction)

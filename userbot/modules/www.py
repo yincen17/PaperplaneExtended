@@ -4,14 +4,14 @@
 # you may not use this file except in compliance with the License.
 #
 """ Userbot module containing commands related to the \
-    Information Superhighway(yes, Internet). """
+    Information Superhighway (yes, Internet). """
 
 from datetime import datetime
 
 import speedtest
 from telethon import functions
 from userbot import CMD_HELP
-from userbot.events import register, errors_handler
+from userbot.events import register
 
 
 @register(outgoing=True, pattern="^.speed$")

@@ -5,7 +5,7 @@
 # From UniBorg by @Spechide
 """ Userbot module containing commands for keeping global notes. """
 
-from userbot.events import register, errors_handler
+from userbot.events import register
 from userbot import CMD_HELP, BOTLOG_CHATID
 
 

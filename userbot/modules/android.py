@@ -10,7 +10,7 @@ from requests import get
 from bs4 import BeautifulSoup
 
 from userbot import CMD_HELP
-from userbot.events import register, errors_handler
+from userbot.events import register
 
 GITHUB = 'https://github.com'
 DEVICES_DATA = 'https://raw.githubusercontent.com/androidtrackers/' \

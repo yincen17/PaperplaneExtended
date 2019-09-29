@@ -6,7 +6,7 @@
 
 from time import sleep
 from userbot import CMD_HELP, BOTLOG, BOTLOG_CHATID, bot
-from userbot.events import register, errors_handler
+from userbot.events import register
 from userbot.modules.admin import get_user_from_event
 
 

@@ -12,7 +12,7 @@ from telethon.events import StopPropagation
 
 from userbot import (AFKREASON, COUNT_MSG, CMD_HELP, ISAFK, BOTLOG,
                      BOTLOG_CHATID, USERS, PM_AUTO_BAN)
-from userbot.events import register, errors_handler
+from userbot.events import register
 
 # ========================= CONSTANTS ============================
 AFKSTR = [

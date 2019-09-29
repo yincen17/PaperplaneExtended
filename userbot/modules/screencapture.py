@@ -11,7 +11,7 @@ import traceback
 from selenium import webdriver
 from asyncio import sleep
 from selenium.webdriver.chrome.options import Options
-from userbot.events import register, errors_handler
+from userbot.events import register
 from userbot import GOOGLE_CHROME_BIN, CHROME_DRIVER, CMD_HELP
 
 

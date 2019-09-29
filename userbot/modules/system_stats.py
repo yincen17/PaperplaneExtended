@@ -13,7 +13,7 @@ from os import remove
 from telethon import version
 
 from userbot import CMD_HELP, ALIVE_NAME
-from userbot.events import register, errors_handler
+from userbot.events import register
 
 # ================= CONSTANT =================
 DEFAULTUSER = str(ALIVE_NAME) if ALIVE_NAME else uname().node

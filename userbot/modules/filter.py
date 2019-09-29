@@ -8,7 +8,7 @@
 from asyncio import sleep
 from re import fullmatch, IGNORECASE, escape
 from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP
-from userbot.events import register, errors_handler
+from userbot.events import register
 
 
 @register(incoming=True, disable_edited=True)

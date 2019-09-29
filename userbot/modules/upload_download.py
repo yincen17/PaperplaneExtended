@@ -22,7 +22,7 @@ from hachoir.parser import createParser
 from telethon.tl.types import DocumentAttributeVideo
 
 from userbot import LOGS, CMD_HELP, TEMP_DOWNLOAD_DIRECTORY
-from userbot.events import register, errors_handler
+from userbot.events import register
 
 
 async def progress(current, total, event, start, type_of_ps, file_name=None):

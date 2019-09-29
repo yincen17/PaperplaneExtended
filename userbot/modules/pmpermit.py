@@ -14,7 +14,7 @@ from sqlalchemy.exc import IntegrityError
 from userbot import (COUNT_PM, CMD_HELP, BOTLOG, BOTLOG_CHATID, PM_AUTO_BAN,
                      LASTMSG, LOGS)
 
-from userbot.events import register, errors_handler
+from userbot.events import register
 
 # ========================= CONSTANTS ============================
 UNAPPROVED_MSG = (

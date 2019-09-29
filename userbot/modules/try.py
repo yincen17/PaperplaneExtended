@@ -8,7 +8,7 @@ from telethon import events, errors, functions, types
 import traceback
 import sys
 import io
-from userbot.events import register, errors_handler
+from userbot.events import register
 from userbot import CMD_HELP
 
 

@@ -556,6 +556,8 @@ async def download_video(v_url):
         opts = {
             'format':
             'bestaudio',
+            'addmetadata':
+            True,
             'key':
             'FFmpegMetadata',
             'writethumbnail':
@@ -585,6 +587,8 @@ async def download_video(v_url):
         opts = {
             'format':
             'best',
+            'addmetadata':
+            True,
             'key':
             'FFmpegMetadata',
             'prefer_ffmpeg':

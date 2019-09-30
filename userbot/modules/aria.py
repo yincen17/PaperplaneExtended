@@ -1,5 +1,7 @@
-#This Lit Module By:- @Zero_cool7870 Sar
-#Special thanks to @spechide who modified this aria
+# Copyright (C) 2019 The Raphielscape Company LLC.
+#
+# Licensed under the Raphielscape Public License, Version 1.c (the "License");
+# you may not use this file except in compliance with the License.
 
 import aria2p
 from asyncio import sleep

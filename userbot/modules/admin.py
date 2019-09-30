@@ -793,35 +793,34 @@ async def get_user_from_event(event):
     """ Get the user from argument or replied message. """
     args = event.pattern_match.group(1).split(' ', 1)
     extra = None
-    if event.reply_to_msg_id and not args[0] == event.message.entities[0]:
-        previous_message = await event.get_reply_message()
-        user_obj = await event.client.get_entity(previous_message.from_id)
-        extra = event.pattern_match.group(1)
-    else:
-        user = args[0]
-        if len(args) == 2:
-            extra = args[1]
+    user = args[0]
+    if len(args) == 2:
+        extra = args[1]
 
-        if user.isnumeric():
-            user = int(user)
+    if user.isnumeric():
+        user = int(user)
 
-        if not user:
+    if not user:
+        if event.reply_to_msg_id:
+            previous_message = await event.get_reply_message()
+            user_obj = await event.client.get_entity(previous_message.from_id)
+            extra = event.pattern_match.group(1)
+        else:
             await event.edit("`Pass the user's username, id or reply!`")
             return
 
-        if event.message.entities is not None:
-            probable_user_mention_entity = event.message.entities[0]
+    if event.message.entities is not None:
+        probable_user_mention_entity = event.message.entities[0]
 
-            if isinstance(probable_user_mention_entity,
-                          MessageEntityMentionName):
-                user_id = probable_user_mention_entity.user_id
-                user_obj = await event.client.get_entity(user_id)
-                return user_obj
-        try:
-            user_obj = await event.client.get_entity(user)
-        except (TypeError, ValueError) as err:
-            await event.edit(str(err))
-            return None
+        if isinstance(probable_user_mention_entity, MessageEntityMentionName):
+            user_id = probable_user_mention_entity.user_id
+            user_obj = await event.client.get_entity(user_id)
+            return user_obj
+    try:
+        user_obj = await event.client.get_entity(user)
+    except (TypeError, ValueError) as err:
+        await event.edit(str(err))
+        return
 
     return user_obj, extra
 
@@ -841,29 +840,29 @@ async def get_user_from_id(user, event):
 
 CMD_HELP.update({
     "admin":
-    ".promote <username/reply> <custom rank (optional)>\
+    ".promote <username/reply> <custom rank (optional)> (or) reply to a message with .promote <rank (optional)>\
 \nUsage: Provides admin rights to the person in the chat.\
-\n\n.demote <username/reply>\
+\n\n.demote <username> (or) reply to a message with .demote\
 \nUsage: Revokes the person's admin permissions in the chat.\
-\n\n.ban <username/reply>|<reason (optional)>\
+\n\n.ban <username> <reason (optional)> (or) reply to a message with .ban <reason (optional)>\
 \nUsage: Bans the person off your chat.\
-\n\n.unban <username/reply>\
+\n\n.unban <username> (or) reply to a message with .unban\
 \nUsage: Removes the ban from the person in the chat.\
-\n\n.mute <username/reply>|<reason (optional)>\
+\n\n.mute <username> <reason (optional)> reply to a message with .mute <reason (optional)>\
 \nUsage: Mutes the person in the chat, works on admins too.\
-\n\n.unmute <username/reply>\
+\n\n.unmute <username/reply> reply to a message with .unmute\
 \nUsage: Removes the person from the muted list.\
-\n\n.gmute <username/reply>|<reason (optional)>\
+\n\n.gmute <username> <reason (optional)> (or) reply to a message with .gmute <reason (optional)>\
 \nUsage: Mutes the person in all groups you have in common with them.\
-\n\n.ungmute <username/reply>\
-\nUsage: Reply someone's message with .ungmute to remove them from the gmuted list.\
+\n\n.ungmute <username> (or) reply to a message with .ungmute\
+\nUsage: Removes the person from the global mute list.\
 \n\n.delusers\
 \nUsage: Searches for deleted accounts in a group. Use .delusers clean to remove deleted accounts from the group.\
 \n\n.admins\
 \nUsage: Retrieves a list of admins in the chat.\
 \n\n.bots\
 \nUsage: Retrieves a list of bots in the chat.\
-\n\n.users or .users <name of member>\
+\n\n.users or .users <search query>\
 \nUsage: Retrieves all (or queried) users in the chat.\
 \n\n.setgppic <reply to image>\
 \nUsage: Changes the group's display picture."

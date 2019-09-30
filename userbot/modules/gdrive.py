@@ -1,8 +1,12 @@
-# Special thanks to @spechide & @Zero_cool7870 & @Prakaska :)
+# Copyright (C) 2019 The Raphielscape Company LLC.
+#
+# Licensed under the Raphielscape Public License, Version 1.c (the "License");
+# you may not use this file except in compliance with the License.
+
 # The entire code given below is verbatim copied from
 # https://github.com/cyberboysumanjay/Gdrivedownloader/blob/master/gdrive_upload.py
 # there might be some changes made to suit the needs for this repository
-# Licensed under MIT License
+# Licensed under MIT License.
 
 import asyncio
 import math

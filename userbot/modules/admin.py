@@ -792,7 +792,6 @@ async def get_users(show):
 async def get_user_from_event(event):
     """ Get the user from argument or replied message. """
     args = event.pattern_match.group(1).split(' ', 1)
-
     # Telegram's user IDs have a min length of 6.
     if args[0].isnumeric() and len(int(args[0])) > 6:
         user = int(user)
@@ -802,26 +801,27 @@ async def get_user_from_event(event):
         except (TypeError, ValueError) as err:
             await event.edit(f"`{str(err)}`")
             return
+        return user_obj, extra
 
     # Handling the given username.
-    elif event.message.entities is not None:
-        probable_user_mention_entity = event.message.entities[0]
+    elif event.entities is not None:
+        probable_user_mention_entity = event.entities[0]
         if isinstance(probable_user_mention_entity, MessageEntityMentionName):
             user_id = probable_user_mention_entity.user_id
             user_obj = await event.client.get_entity(user_id)
         extra = args[1] if len(args) == 2 else None
+        return user_obj, extra
 
     # Extract user info from replied message.
     elif event.reply_to_msg_id:
         previous_message = await event.get_reply_message()
         user_obj = await event.client.get_entity(previous_message.from_id)
         extra = event.pattern_match.group(1)
+        return user_obj, extra
 
-    if not user_obj:
+    else:
         await event.edit("`Pass the user's username, id or reply!`")
         return
-
-    return user_obj, extra
 
 
 async def get_user_from_id(user, event):

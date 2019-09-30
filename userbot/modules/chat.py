@@ -36,7 +36,6 @@ async def permalink(mention):
     """ For .mention command, generates a link to the user's PM with a custom text. """
     user, custom = await get_user_from_event(mention)
     if not user:
-        await mention.edit("`User not found.`")
         return
     if custom:
         await mention.edit(f"[{custom}](tg://user?id={user.id})")

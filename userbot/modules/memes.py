@@ -668,7 +668,6 @@ async def who(event):
     if replied_user:
         replied_user = replied_user[0]
     else:
-        await event.edit("`I can't slap nothing !!`")
         return
     caption = await slap(replied_user, event)
 

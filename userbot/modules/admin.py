@@ -793,12 +793,7 @@ async def get_user_from_event(event):
     """ Get the user from argument or replied message. """
     args = event.pattern_match.group(1).split(' ', 1)
     extra = None
-    if event.reply_to_msg_id and not len(args) == 2:
-        previous_message = await event.get_reply_message()
-        user_obj = await event.client.get_entity(previous_message.from_id)
-        if event.message.entities is None:
-            extra = event.pattern_match.group(1)
-    elif args:
+    if args:
         user = args[0]
         if len(args) == 2:
             extra = args[1]
@@ -823,6 +818,11 @@ async def get_user_from_event(event):
         except (TypeError, ValueError) as err:
             await event.edit(str(err))
             return None
+
+    elif event.reply_to_msg_id:
+        previous_message = await event.get_reply_message()
+        user_obj = await event.client.get_entity(previous_message.from_id)
+        extra = event.pattern_match.group(1)
 
     return user_obj, extra
 

@@ -791,9 +791,13 @@ async def get_users(show):
 
 async def get_user_from_event(event):
     """ Get the user from argument or replied message. """
-    args = event.pattern_match.group(1).split(' ', 1)
     extra = None
-    if args:
+    if event.reply_to_msg_id and not '|' in event.pattern_match.group(1):
+        previous_message = await event.get_reply_message()
+        user_obj = await event.client.get_entity(previous_message.from_id)
+        extra = event.pattern_match.group(1)
+    else:
+        args = event.pattern_match.group(1).split('|', 1)
         user = args[0]
         if len(args) == 2:
             extra = args[1]
@@ -819,11 +823,6 @@ async def get_user_from_event(event):
             await event.edit(str(err))
             return None
 
-    elif event.reply_to_msg_id:
-        previous_message = await event.get_reply_message()
-        user_obj = await event.client.get_entity(previous_message.from_id)
-        extra = event.pattern_match.group(1)
-
     return user_obj, extra
 
 
@@ -842,19 +841,19 @@ async def get_user_from_id(user, event):
 
 CMD_HELP.update({
     "admin":
-    ".promote <username/reply> <custom rank (optional)>\
+    ".promote <username/reply>|<custom rank (optional)>\
 \nUsage: Provides admin rights to the person in the chat.\
 \n\n.demote <username/reply>\
 \nUsage: Revokes the person's admin permissions in the chat.\
-\n\n.ban <username/reply> <reason (optional)>\
+\n\n.ban <username/reply>|<reason (optional)>\
 \nUsage: Bans the person off your chat.\
 \n\n.unban <username/reply>\
 \nUsage: Removes the ban from the person in the chat.\
-\n\n.mute <username/reply> <reason (optional)>\
+\n\n.mute <username/reply>|<reason (optional)>\
 \nUsage: Mutes the person in the chat, works on admins too.\
 \n\n.unmute <username/reply>\
 \nUsage: Removes the person from the muted list.\
-\n\n.gmute <username/reply> <reason (optional)>\
+\n\n.gmute <username/reply>|<reason (optional)>\
 \nUsage: Mutes the person in all groups you have in common with them.\
 \n\n.ungmute <username/reply>\
 \nUsage: Reply someone's message with .ungmute to remove them from the gmuted list.\

@@ -52,7 +52,7 @@ async def time_func(tdata):
     tz_num = tdata.pattern_match.group(2)
 
     t_form = "%H:%M"
-    c_name = ''
+    c_name = None
 
     if len(con) > 4:
         try:
@@ -93,13 +93,15 @@ async def time_func(tdata):
 
     dtnow = dt.now(tz(time_zone)).strftime(t_form)
 
-    if COUNTRY and not len(con) < 4:
+    if c_name != COUNTRY:
+        await tdata.edit(
+            f"`It's`  **{dtnow}**  `in {c_name}({time_zone} timezone).`")
+        return
+
+    elif COUNTRY:
         await tdata.edit(f"`It's`  **{dtnow}**  `here, in {COUNTRY}"
                          f"({time_zone} timezone).`")
         return
-
-    await tdata.edit(
-        f"`It's`  **{dtnow}**  `in {c_name}({time_zone} timezone).`")
 
 
 @register(outgoing=True, pattern="^.date(?: |$)(.*)(?<![0-9])(?: |$)([0-9]+)?")
@@ -154,13 +156,15 @@ async def date_func(dat):
 
     dtnow = dt.now(tz(time_zone)).strftime(d_form)
 
-    if COUNTRY and not len(con) < 4:
+    if c_name != COUNTRY:
+        await dat.edit(f"`It's`  **{dtnow}**  `in {c_name}({time_zone} timezone).`"
+                       )
+        return
+
+    elif COUNTRY:
         await dat.edit(f"`It's`  **{dtnow}**  `here, in {COUNTRY}"
                        f"({time_zone} timezone).`")
         return
-
-    await dat.edit(f"`It's`  **{dtnow}**  `in {c_name}({time_zone} timezone).`"
-                   )
 
 
 CMD_HELP.update({

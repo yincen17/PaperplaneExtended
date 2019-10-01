@@ -9,11 +9,13 @@ class Filters(BASE):
     __tablename__ = "filters"
     chat_id = Column(String(14), primary_key=True)
     keyword = Column(UnicodeText, primary_key=True, nullable=False)
+    reply = Column(UnicodeText)
     f_mesg_id = Column(Numeric)
 
-    def __init__(self, chat_id, keyword, f_mesg_id):
+    def __init__(self, chat_id, keyword, reply, f_mesg_id):
         self.chat_id = str(chat_id)
         self.keyword = keyword
+        self.reply = reply
         self.f_mesg_id = f_mesg_id
 
     def __eq__(self, other):
@@ -40,10 +42,10 @@ def get_filters(chat_id):
         SESSION.close()
 
 
-def add_filter(chat_id, keyword, f_mesg_id):
+def add_filter(chat_id, keyword, reply, f_mesg_id=None):
     to_check = get_filter(chat_id, keyword)
     if not to_check:
-        adder = Filters(str(chat_id), keyword, f_mesg_id)
+        adder = Filters(str(chat_id), keyword, reply, f_mesg_id)
         SESSION.add(adder)
         SESSION.commit()
         return True
@@ -51,7 +53,7 @@ def add_filter(chat_id, keyword, f_mesg_id):
         rem = SESSION.query(Filters).get((str(chat_id), keyword))
         SESSION.delete(rem)
         SESSION.commit()
-        adder = Filters(str(chat_id), keyword, f_mesg_id)
+        adder = Filters(str(chat_id), keyword, reply, f_mesg_id)
         SESSION.add(adder)
         SESSION.commit()
         return False

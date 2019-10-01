@@ -54,7 +54,7 @@ async def time_func(tdata):
     t_form = "%H:%M"
     c_name = ''
 
-    if con:
+    if len(con) > 0:
         try:
             c_name = c_n[con]
         except KeyError:
@@ -116,7 +116,7 @@ async def date_func(dat):
     d_form = "%d/%m/%y - %A"
     c_name = ''
 
-    if con:
+    if len(con) > 0:
         try:
             c_name = c_n[con]
         except KeyError:

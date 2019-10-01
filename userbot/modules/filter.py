@@ -27,15 +27,17 @@ async def filter_incoming_handler(handler):
                 return
             for trigger in filters:
                 pro = fullmatch(trigger.keyword, name, flags=IGNORECASE)
-                if pro:
+                if pro and trigger.f_mesg_id:
                     msg_o = await handler.client.get_messages(
                         entity=BOTLOG_CHATID, ids=int(trigger.f_mesg_id))
                     await handler.reply(msg_o.message, file=msg_o.media)
+                elif pro:
+                    await handler.reply(trigger.reply)
     except AttributeError:
         pass
 
 
-@register(outgoing=True, pattern="^.filter (.*)")
+@register(outgoing=True, pattern="^.filter (\w*)")
 async def add_new_filter(new_handler):
     """ For .filter command, allows adding new filters in a chat """
     try:
@@ -43,35 +45,38 @@ async def add_new_filter(new_handler):
     except AttributeError:
         await new_handler.edit("`Running on Non-SQL mode!`")
         return
-    keyword = new_handler.pattern_match.group(1)
+    notename = new_handler.pattern_match.group(1)
+    string = fltr.text.partition(notename)[2]
     msg = await new_handler.get_reply_message()
-    if not msg:
-        await new_handler.edit(
-            "`I need something to save as reply to the filter.`")
-    elif BOTLOG_CHATID:
-        await new_handler.client.send_message(
-            BOTLOG_CHATID, f"#FILTER\
-        \nCHAT: {new_handler.chat.title}\
-        \nTRIGGER: {keyword}\
-        \nThe following message is saved as the filter's reply data for the chat, please do NOT delete it !!"
-        )
-        msg_o = await new_handler.client.forward_messages(
-            entity=BOTLOG_CHATID,
-            messages=msg,
-            from_peer=new_handler.chat_id,
-            silent=True)
-    else:
-        await new_handler.edit(
-            "`This feature requires the BOTLOG_CHATID to be set.`")
-        return
+    if msg and msg.media and not string:
+        if BOTLOG_CHATID:
+            await new_handler.client.send_message(
+                BOTLOG_CHATID, f"#FILTER\
+            \nCHAT: {new_handler.chat.title}\
+            \nTRIGGER: {keyword}\
+            \n\nThe following message is saved as the filter's reply data for the chat, please do NOT delete it !!"
+            )
+            msg_o = await new_handler.client.forward_messages(
+                entity=BOTLOG_CHATID,
+                messages=msg,
+                from_peer=new_handler.chat_id,
+                silent=True)
+        else:
+            await new_handler.edit(
+                "`Saving media as reply to the filter requires the BOTLOG_CHATID to be set.`"
+            )
+            return
+    elif new_handler.reply_to_msg_id and not string:
+        rep_msg = await new_handler.get_reply_message()
+        string = rep_msg.text
     success = "`Filter` **{}** `{} successfully`"
-    if add_filter(str(new_handler.chat_id), keyword, msg_o.id) is True:
+    if add_filter(str(new_handler.chat_id), keyword, string, msg_o.id) is True:
         await new_handler.edit(success.format(keyword, 'added'))
     else:
         await new_handler.edit(success.format(keyword, 'updated'))
 
 
-@register(outgoing=True, pattern="^.stop (.*)")
+@register(outgoing=True, pattern="^.stop (\w*)")
 async def remove_a_filter(r_handler):
     """ For .stop command, allows you to remove a filter from a chat. """
     try:

@@ -48,6 +48,7 @@ async def add_new_filter(new_handler):
     notename = new_handler.pattern_match.group(1)
     string = new_handler.text.partition(notename)[2]
     msg = await new_handler.get_reply_message()
+    msg_id = None
     if msg and msg.media and not string:
         if BOTLOG_CHATID:
             await new_handler.client.send_message(
@@ -61,6 +62,7 @@ async def add_new_filter(new_handler):
                 messages=msg,
                 from_peer=new_handler.chat_id,
                 silent=True)
+            msg_id = msg_o.id
         else:
             await new_handler.edit(
                 "`Saving media as reply to the filter requires the BOTLOG_CHATID to be set.`"
@@ -69,7 +71,6 @@ async def add_new_filter(new_handler):
     elif new_handler.reply_to_msg_id and not string:
         rep_msg = await new_handler.get_reply_message()
         string = rep_msg.text
-    msg_id = msg_o.id if msg_o else None
     success = "`Filter` **{}** `{} successfully`"
     if add_filter(str(new_handler.chat_id), keyword, string, msg_id) is True:
         await new_handler.edit(success.format(keyword, 'added'))

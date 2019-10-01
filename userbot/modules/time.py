@@ -41,7 +41,7 @@ async def get_tz(con):
         return
 
 
-@register(outgoing=True, pattern="^.time(?: |$)(.*)(?<![0-9])(?: |$)([0-9]+)?")
+@register(outgoing=True, pattern="^.time(?:|$)(.*)(?<![0-9])(?: |$)([0-9]+)?")
 async def time_func(tdata):
     """ For .time command, return the time of
         1. The country passed as an argument,
@@ -54,12 +54,11 @@ async def time_func(tdata):
     t_form = "%H:%M"
     c_name = ''
 
-    if len(con) > 0:
+    if len(con) > 1:
         try:
             c_name = c_n[con]
         except KeyError:
             c_name = con
-
         timezones = await get_tz(con)
     elif COUNTRY:
         c_name = COUNTRY
@@ -94,7 +93,7 @@ async def time_func(tdata):
 
     dtnow = dt.now(tz(time_zone)).strftime(t_form)
 
-    if COUNTRY and not len(con) == 0:
+    if COUNTRY and not len(con) == 1:
         await tdata.edit(f"`It's`  **{dtnow}**  `here, in {COUNTRY}"
                          f"({time_zone} timezone).`")
         return
@@ -103,7 +102,7 @@ async def time_func(tdata):
         f"`It's`  **{dtnow}**  `in {c_name}({time_zone} timezone).`")
 
 
-@register(outgoing=True, pattern="^.date(?: |$)(.*)(?<![0-9])(?: |$)([0-9]+)?")
+@register(outgoing=True, pattern="^.date(?:|$)(.*)(?<![0-9])(?: |$)([0-9]+)?")
 async def date_func(dat):
     """ For .date command, return the date of
         1. The country passed as an argument,
@@ -116,12 +115,11 @@ async def date_func(dat):
     d_form = "%d/%m/%y - %A"
     c_name = ''
 
-    if len(con) > 0:
+    if len(con) > 1:
         try:
             c_name = c_n[con]
         except KeyError:
             c_name = con
-
         timezones = await get_tz(con)
     elif COUNTRY:
         c_name = COUNTRY
@@ -156,7 +154,7 @@ async def date_func(dat):
 
     dtnow = dt.now(tz(time_zone)).strftime(d_form)
 
-    if COUNTRY and not len(con) == 0:
+    if COUNTRY and not len(con) == 1:
         await dat.edit(f"`It's`  **{dtnow}**  `here, in {COUNTRY}"
                        f"({time_zone} timezone).`")
         return

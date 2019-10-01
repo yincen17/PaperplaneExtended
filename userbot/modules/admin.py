@@ -18,9 +18,10 @@ from telethon.tl.functions.channels import (EditAdminRequest,
                                             EditBannedRequest,
                                             EditPhotoRequest)
 from telethon.tl.functions.messages import UpdatePinnedMessageRequest
-from telethon.tl.types import (ChannelParticipantsAdmins, ChatAdminRights,
-                               ChatBannedRights, MessageEntityMentionName,
-                               MessageMediaPhoto, ChannelParticipantsBots)
+from telethon.tl.types import (PeerChannel, ChannelParticipantsAdmins,
+                               ChatAdminRights, ChatBannedRights,
+                               MessageEntityMentionName, MessageMediaPhoto,
+                               ChannelParticipantsBots)
 
 from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, bot
 from userbot.events import register
@@ -523,13 +524,13 @@ async def gspider(gspdr):
                 f"CHAT: {gspdr.chat.title}(`{gspdr.chat_id}`)")
 
 
-@register(outgoing=True, pattern="^.delusers(?: |$)(.*)", groups_only=True)
+@register(outgoing=True, pattern="^.zombies(?: |$)(.*)", groups_only=True)
 async def rm_deletedacc(show):
     """ For .delusers command, list all the ghost/deleted accounts in a chat. """
     if not show.is_group:
         await show.edit("`I don't think this is a group.`")
         return
-    con = show.pattern_match.group(1)
+    con = show.pattern_match.group(1).lower()
     del_u = 0
     del_status = "`No deleted accounts found, Group is cleaned as Hell`"
 
@@ -633,16 +634,20 @@ async def get_bots(show):
     """ For .bots command, list all of the bots of the chat. """
     info = await show.client.get_entity(show.chat_id)
     title = info.title if info.title else "this chat"
-    mentions = f'<b>Bots in {title}:</b> \n'
+    mentions = f'<b>Bots in {title}:</b>\n'
     try:
-        async for user in show.client.iter_participants(
-                show.chat_id, filter=ChannelParticipantsBots):
-            if not user.deleted:
-                link = f"<a href=\"tg://user?id={user.id}\">{user.first_name}</a>"
-                userid = f"<code>{user.id}</code>"
-                mentions += f"\n{link} {userid}"
-            else:
-                mentions += f"\nDeleted Account <code>{user.id}</code>"
+        if isinstance(message.to_id, PeerChat):
+            await show.edit("`I heard that only Supergroups can have bots.`")
+            return
+        else:
+            async for user in show.client.iter_participants(
+                    show.chat_id, filter=ChannelParticipantsBots):
+                if not user.deleted:
+                    link = f"<a href=\"tg://user?id={user.id}\">{user.first_name}</a>"
+                    userid = f"<code>{user.id}</code>"
+                    mentions += f"\n{link} {userid}"
+                else:
+                    mentions += f"\nDeleted Bot <code>{user.id}</code>"
     except ChatAdminRequiredError as err:
         mentions += " " + str(err) + "\n"
     try:
@@ -791,48 +796,37 @@ async def get_users(show):
 
 async def get_user_from_event(event):
     """ Get the user from argument or replied message. """
-    args = event.pattern_match.group(1).split(' ', 1)
-
-    # Handling the given username.
-    if event.message.entities is not None:
-        probable_user_mention_entity = event.message.entities[0]
-        extra = args[1] if len(args) == 2 else None
-        if isinstance(probable_user_mention_entity, MessageEntityMentionName):
-            user_id = probable_user_mention_entity.user_id
-            user_obj = await event.client.get_entity(user_id)
-
-    # Telegram's user IDs have a min length of 6.
-    elif args[0].isnumeric() and len(args[0]) > 6:
-        user = int(args[0])
-        extra = args[1] if len(args) == 2 else None
-        try:
-            user_obj = await event.client.get_entity(user)
-        except (TypeError, ValueError) as err:
-            await event.edit(f"`{str(err)}`")
-            return
-
-    # Handling the given username.
-    elif isinstance(args[0], MessageEntityMentionName):
-        user_obj = await event.client.get_entity(args[0])
-        extra = args[1] if len(args) == 2 else None
-
-    # Extract user info from replied message.
-    elif event.reply_to_msg_id and not user_obj:
+    args = event.pattern_match.group(1).split('|', 1)
+    extra = None
+    if event.reply_to_msg_id and not len(args) == 2:
         previous_message = await event.get_reply_message()
         user_obj = await event.client.get_entity(previous_message.from_id)
         extra = event.pattern_match.group(1)
+    elif len(args[0]) > 0:
+        user = args[0]
+        if len(args) == 2:
+            extra = args[1]
 
-    else:
-        extra = args[1] if len(args) == 2 else None
-        try:
-            user_obj = await event.client.get_entity(args[0])
-        except (TypeError, ValueError) as err:
-            await event.edit(f"`{str(err)}`")
+        if user.isnumeric():
+            user = int(user)
+
+        if not user:
+            await event.edit("`Pass the user's username, id or reply!`")
             return
 
-    if not user_obj:
-        await event.edit("`Pass the user's username, id or reply!`")
-        return
+        if event.message.entities is not None:
+            probable_user_mention_entity = event.message.entities[0]
+
+            if isinstance(probable_user_mention_entity,
+                          MessageEntityMentionName):
+                user_id = probable_user_mention_entity.user_id
+                user_obj = await event.client.get_entity(user_id)
+                return user_obj
+        try:
+            user_obj = await event.client.get_entity(user)
+        except (TypeError, ValueError) as err:
+            await event.edit(str(err))
+            return None
 
     return user_obj, extra
 
@@ -852,21 +846,21 @@ async def get_user_from_id(user, event):
 
 CMD_HELP.update({
     "admin":
-    ".promote <username/reply> <custom rank (optional)> (or) reply to a message with .promote <rank (optional)>\
+    ".promote <username/userid>|<custom rank (optional)> (or) reply to a message with .promote <rank (optional)>\
 \nUsage: Provides admin rights to the person in the chat.\
-\n\n.demote <username> (or) reply to a message with .demote\
+\n\n.demote <username/userid> (or) reply to a message with .demote\
 \nUsage: Revokes the person's admin permissions in the chat.\
-\n\n.ban <username> <reason (optional)> (or) reply to a message with .ban <reason (optional)>\
+\n\n.ban <username/userid>|<reason (optional)> (or) reply to a message with .ban <reason (optional)>\
 \nUsage: Bans the person off your chat.\
-\n\n.unban <username> (or) reply to a message with .unban\
+\n\n.unban <username/userid> (or) reply to a message with .unban\
 \nUsage: Removes the ban from the person in the chat.\
-\n\n.mute <username> <reason (optional)> reply to a message with .mute <reason (optional)>\
+\n\n.mute <username/userid>|<reason (optional)> reply to a message with .mute <reason (optional)>\
 \nUsage: Mutes the person in the chat, works on admins too.\
-\n\n.unmute <username/reply> reply to a message with .unmute\
+\n\n.unmute <username/userid> (or) reply to a message with .unmute\
 \nUsage: Removes the person from the muted list.\
-\n\n.gmute <username> <reason (optional)> (or) reply to a message with .gmute <reason (optional)>\
+\n\n.gmute <username/userid>|<reason (optional)> (or) reply to a message with .gmute <reason (optional)>\
 \nUsage: Mutes the person in all groups you have in common with them.\
-\n\n.ungmute <username> (or) reply to a message with .ungmute\
+\n\n.ungmute <username/userid> (or) reply to a message with .ungmute\
 \nUsage: Removes the person from the global mute list.\
 \n\n.delusers\
 \nUsage: Searches for deleted accounts in a group. Use .delusers clean to remove deleted accounts from the group.\
@@ -876,6 +870,6 @@ CMD_HELP.update({
 \nUsage: Retrieves a list of bots in the chat.\
 \n\n.users or .users <search query>\
 \nUsage: Retrieves all (or queried) users in the chat.\
-\n\n.setgppic <reply to image>\
+\n\n.setgpic <reply to image>\
 \nUsage: Changes the group's display picture."
 })

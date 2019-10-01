@@ -31,9 +31,9 @@ async def useridgetter(target):
             name, user_id))
 
 
-@register(outgoing=True, pattern="^.mention(?: |$)(.*)")
+@register(outgoing=True, pattern="^.link(?: |$)(.*)")
 async def permalink(mention):
-    """ For .mention command, generates a link to the user's PM with a custom text. """
+    """ For .link command, generates a link to the user's PM with a custom text. """
     user, custom = await get_user_from_event(mention)
     if not user:
         return
@@ -168,7 +168,7 @@ CMD_HELP.update({
 \nUsage: Unmutes a muted chat.\
 \n\n.mutechat\
 \nUsage: Allows you to mute any chat.\
-\n\n.mention <username> <optional text> (or) reply to someone's message with .mention <optional text>\
+\n\n.link <username/userid>|<optional text> (or) reply to someone's message with .link <optional text>\
 \nUsage: Generate a permanent link to the user's profile with optional custom text.\
 \n\n.regexninja on/off\
 \nUsage: Globally enable/disables the regex ninja module.\

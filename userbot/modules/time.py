@@ -94,7 +94,7 @@ async def time_func(tdata):
 
     dtnow = dt.now(tz(time_zone)).strftime(t_form)
 
-    if COUNTRY:
+    if COUNTRY and not len(con) == 0:
         await tdata.edit(f"`It's`  **{dtnow}**  `here, in {COUNTRY}"
                          f"({time_zone} timezone).`")
         return
@@ -156,58 +156,13 @@ async def date_func(dat):
 
     dtnow = dt.now(tz(time_zone)).strftime(d_form)
 
-    if COUNTRY:
+    if COUNTRY and not len(con) == 0:
         await dat.edit(f"`It's`  **{dtnow}**  `here, in {COUNTRY}"
                        f"({time_zone} timezone).`")
         return
 
     await dat.edit(f"`It's`  **{dtnow}**  `in {c_name}({time_zone} timezone).`"
                    )
-
-
-@register(outgoing=True, pattern="^.settime (.*)(?<![0-9])(?: |$)([0-9]+)?")
-async def set_time_country(loc):
-    """ For .settime command, change the default userbot
-        country for date and time commands. """
-    global COUNTRY
-    global TZ_NUMBER
-    temp_country = loc.pattern_match.group(1).title()
-    temp_tz_num = loc.pattern_match.group(2)
-
-    try:
-        c_name = c_n[temp_country]
-    except KeyError:
-        c_name = temp_country
-
-    timezones = await get_tz(temp_country)
-
-    if not timezones:
-        await loc.edit("`Invaild country.`")
-        return
-
-    if len(timezones) == 1:
-        TZ_NUMBER = 1
-    elif len(timezones) > 1:
-        if temp_tz_num:
-            TZ_NUMBER = int(temp_tz_num)
-        else:
-            return_str = f"`{c_name} has multiple timezones:`\n"
-
-            for i, item in enumerate(timezones):
-                return_str += f"`{i+1}. {item}`\n"
-
-            return_str += "\n`Choose one by typing the number "
-            return_str += "in the command.`\n"
-            return_str += f"Example: .settime {c_name} 2"
-
-            await loc.edit(return_str)
-            return
-
-    COUNTRY = c_name
-    tz_name = timezones[TZ_NUMBER - 1]
-
-    await loc.edit("`Default country for date and time set to "
-                   f"{COUNTRY}({tz_name} timezone).`")
 
 
 CMD_HELP.update({
@@ -223,11 +178,4 @@ CMD_HELP.update({
     "\nUsage: Get the date of a country. If a country has "
     "multiple timezones, it will list all of them "
     "and let you select one."
-})
-CMD_HELP.update({
-    "settime":
-    ".settime <country name/code> <timezone number>"
-    "\nUsage: Set the default country for .time and .date "
-    "command. If a country has multiple timezones, "
-    "it will list all of them and let you select one."
 })

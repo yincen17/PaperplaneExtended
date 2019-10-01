@@ -42,7 +42,7 @@ def get_filters(chat_id):
         SESSION.close()
 
 
-def add_filter(chat_id, keyword, reply, f_mesg_id=None):
+def add_filter(chat_id, keyword, reply, f_mesg_id):
     to_check = get_filter(chat_id, keyword)
     if not to_check:
         adder = Filters(str(chat_id), keyword, reply, f_mesg_id)

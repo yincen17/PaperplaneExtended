@@ -796,23 +796,17 @@ async def get_users(show):
 
 async def get_user_from_event(event):
     """ Get the user from argument or replied message. """
-    args = event.pattern_match.group(1).split('|', 1)
+    args = event.pattern_match.group(1).split(' ', 1)
     extra = None
-    if event.reply_to_msg_id and not len(args) == 2:
-        previous_message = await event.get_reply_message()
-        user_obj = await event.client.get_entity(previous_message.from_id)
-        extra = event.pattern_match.group(1)
-    elif len(args[0]) > 0:
+    user_obj = None
+
+    if len(args[0]) > 0:
         user = args[0]
         if len(args) == 2:
             extra = args[1]
 
-        if user.isnumeric():
+        if user.isnumeric() and len(user) > 6:
             user = int(user)
-
-        if not user:
-            await event.edit("`Pass the user's username, id or reply!`")
-            return
 
         if event.message.entities is not None:
             probable_user_mention_entity = event.message.entities[0]
@@ -824,9 +818,18 @@ async def get_user_from_event(event):
                 return user_obj
         try:
             user_obj = await event.client.get_entity(user)
-        except (TypeError, ValueError) as err:
-            await event.edit(str(err))
-            return None
+        except (TypeError, ValueError):
+            user_obj = None
+            pass
+
+    elif event.reply_to_msg_id and not user_obj:
+        previous_message = await event.get_reply_message()
+        user_obj = await event.client.get_entity(previous_message.from_id)
+        extra = event.pattern_match.group(1)
+
+    else:
+        await event.edit("`Pass the user's username, id or reply!`")
+        return
 
     return user_obj, extra
 

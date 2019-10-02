@@ -157,8 +157,8 @@ async def date_func(dat):
     dtnow = dt.now(tz(time_zone)).strftime(d_form)
 
     if c_name != COUNTRY:
-        await dat.edit(f"`It's`  **{dtnow}**  `in {c_name}({time_zone} timezone).`"
-                       )
+        await dat.edit(
+            f"`It's`  **{dtnow}**  `in {c_name}({time_zone} timezone).`")
         return
 
     elif COUNTRY:
